@@ -1,1 +1,1 @@
-nao tem codigo
+print("olá")
