@@ -40,6 +40,9 @@ class TrackManager:
 
         for det_idx, track_id in current_assignments.items():
             det = detected_faces[det_idx]
+
+            was_lost = self.tracks[track_id]["lost"] > 0
+
             self.tracks[track_id]["bbox"] = det["bbox"]
             self.tracks[track_id]["center"] = det["center"]
             self.tracks[track_id]["confidence"] = det["confidence"]
@@ -68,7 +71,10 @@ class TrackManager:
                 "label": "Desconhecido",
                 "registered": False,
                 "last_recognition_frame": -999,
-                "best_distance": None
+                "best_distance": None,
+                "recognized_at": None,
+                "greeting_mode": False,
+                "just_reappeared": False
             }
 
             current_assignments[det_idx] = track_id

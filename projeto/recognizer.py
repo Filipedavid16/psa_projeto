@@ -3,6 +3,7 @@ import numpy as np
 import shutil
 import threading
 import face_recognition
+import time
 
 from config import FACE_DB_DIR, PENDENTES_DIR, MAX_PHOTOS_PER_ID, RECOGNITION_TOLERANCE
 from utils import sanitize_folder_name
@@ -175,6 +176,8 @@ class FaceRegistry:
             tracks[track_id]["label"] = person_name
             tracks[track_id]["registered"] = True
             tracks[track_id]["best_distance"] = 0.0
+            tracks[track_id]["recognized_at"] = time.time()
+            tracks[track_id]["greeting_mode"] = True
 
         self.reload_known_faces_async()
 
