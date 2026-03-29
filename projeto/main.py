@@ -14,9 +14,10 @@ from tracker import TrackManager
 from recognizer import FaceRegistry
 from register_ui import RegisterUI
 from utils import save_face_image
+from audio_manager import AudioManager
 
 
-def try_recognize_faces(frame, detected_faces, assignments, tracker, registry):
+def try_recognize_faces(frame, detected_faces, assignments, tracker, registry,audio):
     for det_idx, det in enumerate(detected_faces):
         track_id = assignments[det_idx]
         track_data = tracker.tracks[track_id]
@@ -42,6 +43,7 @@ def try_recognize_faces(frame, detected_faces, assignments, tracker, registry):
             registry.cleanup_recognized_track(track_id, tracker.tracks)
 
             print(f"ID {track_id} reconhecido automaticamente como '{name}'.")
+            audio.play_person_greeting(name)
 
 
 def save_unknown_faces(frame, detected_faces, assignments, tracker):
@@ -142,6 +144,7 @@ def main():
     tracker = TrackManager()
     registry = FaceRegistry()
     ui = RegisterUI()
+    audio = AudioManager()
 
     cap = cv2.VideoCapture(0)
 
@@ -167,7 +170,7 @@ def main():
         detected_faces = detector.detect(frame)
         assignments = tracker.update(detected_faces)
 
-        try_recognize_faces(frame, detected_faces, assignments, tracker, registry,)
+        try_recognize_faces(frame, detected_faces, assignments, tracker, registry, audio)
         save_unknown_faces(frame, detected_faces, assignments, tracker)
         draw_tracks(frame, detected_faces, assignments, tracker)
 

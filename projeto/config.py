@@ -7,7 +7,9 @@ MODEL_PATH = BASE_DIR / "modelo" / "res10_300x300_ssd_iter_140000.caffemodel"
 
 PENDENTES_DIR = BASE_DIR / "pendentes"
 FACE_DB_DIR = BASE_DIR / "face_db"
+AUDIO_DB_DIR = BASE_DIR / "audio_db"
 
+AUDIO_DB_DIR.mkdir(exist_ok=True)
 PENDENTES_DIR.mkdir(exist_ok=True)
 FACE_DB_DIR.mkdir(exist_ok=True)
 

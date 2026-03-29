@@ -7,6 +7,7 @@ import time
 
 from config import FACE_DB_DIR, PENDENTES_DIR, MAX_PHOTOS_PER_ID, RECOGNITION_TOLERANCE
 from utils import sanitize_folder_name
+from audio_manager import ensure_greeting_audio_file
 
 
 class FaceRegistry:
@@ -180,6 +181,7 @@ class FaceRegistry:
             tracks[track_id]["greeting_mode"] = True
 
         self.reload_known_faces_async()
+        ensure_greeting_audio_file(person_name)
 
         print(f"ID {track_id} registado como '{person_name}'.")
         print(f"{moved_count} fotos movidas para: {person_folder}")
