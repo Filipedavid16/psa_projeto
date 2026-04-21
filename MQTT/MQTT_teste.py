@@ -33,7 +33,7 @@ t = 0
 #Comando da câmara
 while True:
     pan = 2.0 * math.sin(0.75 * t)
-    tilt = 0.2 * math.sin(2*t)
+    tilt = 0.2 * math.sin(2 * t)
 
     data = {
         "pan": pan,
