@@ -15,7 +15,7 @@ from recognizer import FaceRegistry
 from register_ui import RegisterUI
 from utils import save_face_image
 from audio_manager import AudioManager
-
+from mqtt_cam import MQTTFrameReceiver
 
 def try_recognize_faces(frame, detected_faces, assignments, tracker, registry,audio):
     for det_idx, det in enumerate(detected_faces):
@@ -146,12 +146,13 @@ def main():
     ui = RegisterUI()
     audio = AudioManager()
 
-    cap = cv2.VideoCapture(0)
+    #cap = cv2.VideoCapture(0)
 
-    if not cap.isOpened():
-        print("Erro: nao foi possivel abrir a camara.")
-        return
-
+    #if not cap.isOpened():
+        #print("Erro: nao foi possivel abrir a camara.")
+        #return
+    camera = MQTTFrameReceiver(broker="localhost", port=1883, topic="webots/camera")
+    camera.start()
     registry.reload_known_faces_async()
 
     cv2.namedWindow(MAIN_WINDOW)
@@ -161,11 +162,20 @@ def main():
     print("  2 -> abrir/fechar janela de registo")
 
     while True:
-        ret, frame = cap.read()
+        ret, frame = camera.read()
 
         if not ret:
-            print("Erro ao ler imagem da camara.")
-            break
+            key = cv2.waitKey(1) & 0xFF
+            if key == ord("1"):
+                break
+            elif key == ord("2"):
+                ui.toggle()
+            continue
+        #ret, frame = cap.read()
+
+        #if not ret:
+            #print("Erro ao ler imagem da camara.")
+            #break
 
         detected_faces = detector.detect(frame)
         assignments = tracker.update(detected_faces)
@@ -200,9 +210,10 @@ def main():
         elif ui.is_open:
             ui.process_key(key, registry, tracker.tracks)
 
-    cap.release()
+    #cap.release()
+    #cv2.destroyAllWindows()
+    camera.stop()
     cv2.destroyAllWindows()
-
 
 if __name__ == "__main__":
     main()
